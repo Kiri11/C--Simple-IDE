@@ -1,0 +1,12 @@
+int x;
+int main()
+{ int x;
+  if (x=0){
+	int x;
+	x = x + 1;
+	{ 
+	   int x;
+	   x =  x*2;
+	}
+  }
+}

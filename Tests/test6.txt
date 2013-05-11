@@ -1,0 +1,9 @@
+int z;
+int main(){
+  int a,b,c;
+  a = 3;
+  while (a < 7){
+    a = a + 1;
+    printf("a = %d\n", a);
+  }
+}

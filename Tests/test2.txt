@@ -1,0 +1,16 @@
+int inc(int x){
+	int inc;
+	inc = 0;
+	return inc;
+}
+
+int dec(int x){
+	return x - 1;
+}
+
+int main(){
+	int main;
+	main = 0;
+	inc(main);
+	return 0;
+}

@@ -1,0 +1,314 @@
+\documentclass{article}
+
+% Языковые пакеты
+\usepackage{fontspec} 
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+% Используемый шрифт - Times New Roman
+\setmainfont[Mapping=tex-text]{Times New Roman}
+% Используемые языки
+\usepackage{polyglossia}
+
+\setdefaultlanguage[spelling=modern]{russian}
+\setotherlanguages{english}
+    \AtBeginDocument{%
+      \def\postsection{\quad}%
+      \def\postsubsection{\quad}%
+      \def\postsubsubsection{\quad}%
+      \def\postparagraph{\quad}%
+      \def\postsubparagraph{\quad}%
+    }
+
+\newfontfamily{\cyrillicfonttt}{Courier New}
+% Поля страницы
+\usepackage{geometry}
+\geometry{left=3cm}
+\geometry{right=2cm}
+\geometry{top=2cm}
+\geometry{bottom=2cm}
+% Использовать отступы  вначале абзаца
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt} % убираем линию вверху каждой страницы(устанавливаем ширину ее в 0)
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{orange}{RGB}{255,127,0}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C++,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=3,                       % sets default tabsize to 3 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\begin{document}
+\begin{center}
+\Huge Правила оформления исходных текстов.
+\end{center}
+
+\Large Отступы.
+\normalsize
+\vskip0.5cm
+Величина отступа равняется \textbf{3} пробелам, причем символ табуляции заменяется соответствующим количеством пробельных символов.
+\vskip0.5cm
+\Large Выражения и скобки в выражениях.
+\normalsize
+\vskip0.5cm
+Выражения и аргументы функций, заключенные между круглыми, угловыми, либо квадратными скобками, отделяются от скобок одним пробелом. Если используется пустая скобочная последовательность \textbf{()}, \textbf{\{\}}, \textbf{<>}, \textbf{[]}, тогда пробела между скобками не ставится. Между операторами в выражении также ставятся пробелы. После ключевых слов типа \texttt{if}, \texttt{for} и т.п., а также после имен классов у функций пробел перед круглыми скобками не ставится. Примеры:
+\begin{lstlisting}
+template< typename T >
+void Func( T a )
+{
+   a.DoSomething();
+}
+
+template<>
+void Func< int >( int a )
+{
+   a = ( 1 + 2 ) * 3;
+}
+
+for( int j = 0; j < n; ++j )
+\end{lstlisting}
+\vskip0.5cm
+
+\Large Оператор <<?:>>.
+\normalsize
+\vskip0.5cm
+При написании оператора <<?:>> каждая часть оператора должна быть отделена пробелами:
+\begin{lstlisting}
+5 == a ? 1 + b : *vec.begin();
+\end{lstlisting}
+\color{red}Недопустимо использование оператора <<?:>> в качестве замены условиям <<if>>.
+\color{black}
+
+\vskip0.5cm
+
+\Large CV-квалификаторы типов переменных, указатели и ссылки.
+\normalsize
+\vskip0.5cm
+Квалификаторы \texttt{\textbf{const}} и \texttt{\textbf{volatile}} идут после имени типа при объявлении переменных и обозначении типов возвращаемого значения для функции. Символы \texttt{\textbf{*}} и \texttt{\textbf{\&}} пробелом слева не отделяется от типа, а справа от имени переменной отделяется одним пробелом. Пример:
+\begin{lstlisting}
+char const* a; // указатель на char const
+char* const a; // константный указатель на char
+
+int F( std::vector< int > const& v )
+{
+   assert( !v.empty() );
+   return v[ 0 ];
+}
+\end{lstlisting}
+\vskip0.5cm
+
+\Large Группировка условий в сравнениях.
+\normalsize
+\vskip0.5cm
+Условия проверки на равенство и неравенство(операторы \texttt{==} и \texttt{!=}) выполняются в стиле left-hand comparison, то есть по левую сторону от знака сравнения стоит rvalue, а по правую -- lvalue сущность. Пример:
+\begin{lstlisting}
+int exit_code = Procedure();
+
+if( 0 == exit_code )
+   DoSomething();
+\end{lstlisting}
+
+Неправильный вариант:
+\lstset{ %
+  backgroundcolor=\color{orange}}
+
+\begin{lstlisting}
+int exit_code = Procedure();
+
+if( exit_code == 0 )
+   DoSomething();
+\end{lstlisting}
+\lstset{ %
+  backgroundcolor=\color{white}}
+
+Несколько условий группируются так, чтобы знаки конкатенации условий \texttt{||}, \texttt{\&\&} находились на той же строке, что и первое условие из комбинации двух условий, сами условия, если их несколько, заключаются в скобки и выравниваются, чтобы они начинались строго друг под другом. Пример:
+\begin{lstlisting}
+if( ( 1 == a ) &&
+    ( invalid_size != vec.size() ) &&
+    ( std::string( "blah" ) == my_str ) )
+{
+   DoSomething();
+}
+
+if( ( ( 1 == a ) &&
+      ( invalid_size != vec.size() ) ) ||
+    ( something >= 12 ) )
+{
+   DoSomething();
+}  
+\end{lstlisting}
+
+\vskip0.5cm
+\Large Фигурные скобки.
+\normalsize
+\vskip0.5cm
+Открывающая фигурная скобка ставится на новой строке без отступа. Текст, следующий после скобки, начинается со следующей строки с отступом. Закрывающая фигурная скобка ставится ровно под открывающей. Пример:
+\begin{lstlisting}
+if( 1 == a )
+{
+   a = 2;
+}
+
+do
+{
+   DoSomething();
+}
+while( true == condition );
+\end{lstlisting}
+
+\vskip0.5cm
+\Large Правила наименования переменных.
+\normalsize
+\vskip0.5cm
+Недопустимо использование ведущих символов нижнего подчёркивания в названиях переменных. Транслитерация имен переменных(то есть написание русских слов английскими буквами) тоже недопустима.
+Переменные-члены класса начинаются с префикса <<\texttt{m}>>(например: \texttt{mIntValue}), а далее имя переменной продолжается в camel case. 
+Имена аргументов функции также следуют в camel case, только первое слово начинается с маленькой буквы(например: \texttt{myArgument}). 
+Имена локальных переменных в функциях именуются по традиционным правилам именования в C++, когда все слова пишутся с маленькой буквы, а отдельные слова разделяются символами нижнего подчёркивания(пример: \texttt{my\_var}). Имена классов, функций, шаблонных аргументов также подчиняются соглашению camel case, в данном случае все слова, включая первое, пишутся с большой буквы(пример: \texttt{class MyClassFactory : public AbstractFactory}).
+Функции, возвращающие значения опций, состояний, размеров должны именоваться без префикса «Get». Например: int Size(),  int Options().
+Функции, устанавливающие значения опций, состояний, размеров должны именоваться c префиксом «Set». Например: SetSize(int),  SetOptions(int).
+Функции, проверяющие какое состояние и возвращающие bool,  должны именоваться с префиксом «Is». Например: bool IsVisible().
+
+
+Глобальные переменные, все функции, методы классов, типы данных, классы – все слова в имени должны начинаться с буквы в верхнем регистре, остальные буквы в нижнем регистре, подчёркивание не используется. Например: MainDB, Buf, DataView, GetPos.
+
+
+Константы и перечисления (enum) – для каждой группы констант заводится префикс – несколько букв в нижнем регистре, например, для перечисления «ResourceTypes» префикс будет «rt». Имена всех констант данной группы должны начинаться с такого префикса, все остальные буквы имени должны быть в верхнем регистре, слова в имени разделяются подчёркиванием. Например: rtMENU\_BAR, ftTEXT, msgSET\_TEXT.
+
+
+Метки оператора goto, а также имена макросов и константы пишутся в верхнем регистре, слова разделяются подчёркиванием. Например: DONT\_USE\_GOTO, CONST\_STRING, MY\_MACRO.
+
+\vskip0.5cm
+\Large Правила описания функций.
+\normalsize
+\vskip0.5cm
+При описании функций и методов классов не допускается опускать имена параметров, если не очевидно, что этот параметр означает. Например, так писать нельзя:
+\begin{lstlisting}
+int SetParams(int,int,int); 
+\end{lstlisting}
+Нужно писать так:
+\begin{lstlisting}
+int SetParams( int x, int y, int size );
+\end{lstlisting}
+А вот так писать можно, так как из наименования функции и типа параметра ясно, что должна делать данная функция:
+\begin{lstlisting}
+int Delete( Entry& ); 
+\end{lstlisting}
+
+\vskip0.5cm
+\Large Правила описания классов.
+\normalsize
+\vskip0.5cm
+В описании класса сначала должен идти раздел public, далее раздел protected, а потом private. Внутри каждого раздела должны быть сначала описаны методы, а потом поля класса. 
+Перед словами «protected» и «private» должна быть оставлена пустая строка. Пустая строка должна быть и между полями и методами класса. 
+Имена полей и методов класса выравниваются по левому краю, типы полей и типы возвращаемых методами значений выравниваются по правому краю.
+Перечисление «друзей» класса идёт самым последним перед закрывающей скобкой.
+Если класс переопределяет наследуемый виртуальный метод, то перед этим методом обязательно нужно указать «virtual».
+Пример описания класса:
+\begin{lstlisting}
+class MyItem : public AbstractItem
+{
+   typedef AbstractItem MyParent;
+   
+   public:
+   
+   enum ItemType
+   {
+      itSIMPLE,
+      itCOMPOSITE
+   };
+   
+   
+                       MyItem( ItemType );
+   virtual            ~MyItem();
+   
+    std::string const& Name() const;
+                  void SetName( std::string const& name );
+   
+              ItemType Type() const;
+                  void SetType( ItemType type );
+   
+   protected:
+   
+   virtual        void DoSave() const;
+   virtual        void DoLoad();
+   
+   virtual std::string HandleEvent( Event evt )
+                       {
+                          // некоторая своя обработка
+                          return MyParent::HandleEvent( evt );
+                       }
+   
+   private:
+   
+           std::string mName;
+   std::vector< Opts > mOptions;
+              ItemType mType;
+};
+\end{lstlisting}
+
+\vskip0.5cm
+\Large Правила написания комментариев.
+\normalsize
+\vskip0.5cm
+Комментирование классов, методов и различных флагов крайне желательно. Комментарии к классам и функциям даются в нотации doxygen'а:
+\begin{lstlisting}
+/**
+ * \author Вася Пупкин
+ * \brief Функция, вычисляющая длину окружности радиуса radius
+ * \param radius радиус окружности
+ * \details если radius < 0, будет сгенерировано исключение типа InvalidRadiusException
+ */
+double CircleLength( double radius );
+\end{lstlisting}
+
+\vskip0.5cm
+\Large Прочие рекомендации по стилю программирования.
+\normalsize
+\vskip0.5cm
+Крайне не рекомендуется использование оператора \texttt{goto}! Константы не стоит определять с помощью макросов \texttt{define}, и вообще их использование в целом нежелательно и его стоит избегать. Магические числа в коде не допускаются, нужно заводить именованные типизированные константы, помеченные квалификатором \texttt{const}.
+
+Если функция принимает указатель или ссылку на нечто, что не должно этой функцией изменяться, то не забывайте указывать «const». Особенно это касается параметров «char*». 
+
+Если метод класса не изменяет поля класса, то указывайте «const» после описания такого метода. Например: int Count() const;. 
+
+В большинстве случаев экземпляры классов в функцию нужно передавать по ссылке.  
+\end{document}

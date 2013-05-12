@@ -5,77 +5,83 @@
 #include "CodeGenerator.h"
 
 
-class Parser{
+class Parser
+{
 public:
-	string variables;
-	string parsingTree;
-	string tokens;
-	string parse(string parseStr);
-	string getAsmCode();
+
+	std::string mVariables;
+	std::string mParsingTree;
+	std::string mTokens;
+
+	std::string Parse( std::string parseStr );
+	std::string AsmCode();
+
 private:
-	string asmCode;
-	string parseStr;
-	int depth;
-	int lexLevel;
 
-	CodeGenerator generator;
-	Lexer myLexer;
-	token currentToken;
-	SymbolTable symbolTable;
-	GlobalTable globalTable;
-	void readNextToken();
-	void OutputDepth(string funcName);
-	bool checkIsFunction();
-	void outputVariable(bool isParameter);
-	string getIdAddress(string idName);
-	int getFuncParamsNumber(string funcName);
+	std::string mAsmCode;
+	std::string mParseStr;
+	int mDepth;
+	int mLexLevel;
 
-	void program();
-	void ext_def();
-	void program2();
-	void func_def_notype();
-	void func_or_data_def_notype_noident(string funcName);
-	void type();
-	void func_def_part2(string funcName);
-	void func_def_main(string funcName, int paramCount);
-	int params(int paramCount);
-	int params2(int paramCount);
-	void declarators2();
-	void declarators();
-	void comp_statement(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void comp_statement_inside(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void declarations();
-	void declarations2();
-	void statements(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void statements2(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void statement(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void if_statement(int returnLabel, int loopStartLabel, int loopEndLabel);
-	void else2(int ifEndlabel, int returnLabel, int loopStartLabel, int loopEndLabel);
-	void while_statement(int returnLabel);
-	void do_statement(int returnLabel);
-	void expr2();
-	int  exprs2(string funcName);
-	int  exprs(int paramCount, string funcName);
-	int  exprs3(int paramCount, string funcName);
-	void data_def();
-	void func_call(string funcName);
-	void identifier(string idName);
+	CodeGenerator mGenerator;
+	Lexer mLexer;
+	Token mCurrentToken;
+	SymbolTable mSymbolTable;
+	GlobalTable mGlobalTable;
 
-	void expr();
+	void ReadNextToken();
+	void OutputDepth( std::string funcName );
+	bool CheckIsFunction();
+	void OutputVariable( bool isParameter );
+	std::string GetIdAddress( std::string idName );
+	int GetFuncParamsNumber( std::string funcName );
+
+	void Program();
+	void ExtDef();
+	void Program2();
+	void FuncDefNoType();
+	void FuncOrDataDefNotypeNoident( std::string funcName );
+	void Type();
+	void FuncDefPart2( std::string funcName );
+	void FuncDefMain( std::string funcName, int paramCount );
+	int Params( int paramCount );
+	int Params2( int paramCount );
+	void Declarators2();
+	void Declarators();
+	void CompStatement( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void CompStatementInside( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void Declarations();
+	void Declarations2();
+	void Statements( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void Statements2( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void Statement( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void IfStatement( int returnLabel, int loopStartLabel, int loopEndLabel );
+	void Else2( int ifEndlabel, int returnLabel, int loopStartLabel, int loopEndLabel );
+	void WhileStatement( int returnLabel );
+	void DoStatement( int returnLabel );
+	void Expr2();
+	int  Exprs2( std::string funcName );
+	int  Exprs( int paramCount, std::string funcName );
+	int  Exprs3( int paramCount, std::string funcName );
+	void DataDef();
+	void FuncCall( std::string funcName );
+	void Identifier( std::string idName );
+
+	void Expr();
 	void L0();
 	void L1();
-	void t0();
+	void T0();
 	void L2();
-	void t1();
+	void T1();
 	void L3();
-	void t2();
+	void T2();
 	void L4();
-	void t3();
+	void T3();
 	void L5();
-	void t4();
+	void T4();
 	void L6();
-	void t5();
+	void T5();
 	void L7();
-	void L8(string idName);
+	void L8( std::string idName );
 	
 };

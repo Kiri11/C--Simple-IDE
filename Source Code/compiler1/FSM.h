@@ -1,27 +1,38 @@
 #pragma once
 #include <string>
 #include "Token.h"
-using std::string;
 
-enum char_type{
-	alpha, digit, space, smth
+enum CharType
+{
+   ctAlpha,
+   ctDigit,
+   ctSpace,
+   ctSmth
 };
 
-enum state {
-	block, halt, progress
+enum State
+{
+   sBlock,
+   sHalt,
+   sProgress
 };
 
 // Finite-state Machine
-class FSM{
+class FSM
+{
 public:
-	FSM();
-	void reset();
-	token_type get_current_state();
-	// Transition returns 0 if block, 1 if halt, 2 if in progress
-	state transition(char input);  
-	string get_current_string();
+
+   FSM();
+   void Reset();
+   token_type GetCurrentState();
+   // Transition returns 0 if block, 1 if halt, 2 if in sProgress
+   State Transition( char input );  
+   std::string GetCurrentString();
+
 private:
-	token_type current_state;
-	string current_string;
-	char_type check_char_type(char ch);
+
+   CharType CheckCharType( char ch );
+
+   token_type mCurrentState;
+   std::string mCurrentString;
 };

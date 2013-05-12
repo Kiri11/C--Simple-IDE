@@ -4,17 +4,20 @@
 #include "Token.h"
 #include "HashTable.h"
 
-class Lexer {
+class Lexer
+{
 public:
-	Lexer(string input_string);
-	token get_token();
-	token see_token(); 
-	void setInputString(string inputString);
-	Lexer();
+
+   Lexer();
+   Lexer( std::string input_string );
+   Token GetToken();
+   Token SeeToken(); 
+   void SetInputString( std::string inputString );
+   
 private:
 //	Lexer(); // don't allow to create empty lexer
-	string full_input;
-	int input_iterator;
-	void CheckKeyWord(token &kw_token);
-	HashTable stringTable;
+   std::string mFullInput;
+   int mInputIterator;
+   void CheckKeyWord( Token &kw_token );
+   HashTable mStringTable;
 };

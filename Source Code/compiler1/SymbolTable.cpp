@@ -1,76 +1,90 @@
 ﻿#include "SymbolTable.h"
 
 //SymbolTable::SymbolTable(){
-	//createLevel(); // ?
+   //createLevel(); // ?
 //}
 
-void SymbolTable::createLevel(){
-	HashMap newLevel;
-	localTable.push_front(newLevel);
-	paramTable.push_front(newLevel);
+void SymbolTable::CreateLevel()
+{
+   HashMap newLevel;
+   mLocalTable.push_front( newLevel );
+   mParamTable.push_front( newLevel );
 }
 
-void SymbolTable::deleteLevel(){
-	localTable.pop_front();
-	paramTable.pop_front();
+void SymbolTable::DeleteLevel()
+{
+   mLocalTable.pop_front();
+   mParamTable.pop_front();
 }
 
-int SymbolTable::insert(string idName, bool isIdParameter){
-	// check last level
-	// if not exist, insert
-	// else throw exception
-	if (getLevel() == 0) throw (string) "Error: trying to insert into empty symbol table.";
+int SymbolTable::Insert( std::string idName, bool isIdParameter )
+{
+   // check last level
+   // if not exist, insert
+   // else throw exception
+   if( GetLevel() == 0 ) 
+      throw ( std::string ) "Error: trying to insert into empty symbol table.";
 
-	if (isIdDeclaredOnLastLevel(idName) == 0){
-		int newAddress;
-		if (isIdParameter){
-			newAddress = getNewParamAddress();
-			paramTable.front().insert(pair<string, int>(idName, newAddress));
-		}
-		else{
-			newAddress = getNewLocalAddress();
-			localTable.front().insert(pair<string, int>(idName, newAddress));
-		}
-		return newAddress;
-	}
-	else{
-		string errorStr = "Semantic error: redefinition of identifier " + idName ;
-		throw errorStr;
-	}
+   if( IsIdDeclaredOnLastLevel( idName ) == 0 )
+   {
+      int newAddress;
+      if( isIdParameter )
+      {
+         newAddress = GetNewParamAddress();
+         mParamTable.front().insert( std::make_pair( idName, newAddress ) );
+      }
+      else
+      {
+         newAddress = GetNewLocalAddress();
+         mLocalTable.front().insert( std::make_pair( idName, newAddress ) );
+      }
+      return newAddress;
+   }
+   else
+   {
+      std::string errorStr = "Semantic error: redefinition of identifier " + idName ;
+      throw errorStr;
+   }
 }
 
-bool SymbolTable::isIdDeclaredOnLastLevel(string checkIdName){
-	return (localTable.front().count(checkIdName) || paramTable.front().count(checkIdName));
+bool SymbolTable::IsIdDeclaredOnLastLevel( std::string checkIdName )
+{
+   return ( mLocalTable.front().count( checkIdName ) || mParamTable.front().count( checkIdName ) );
 }
 
-int SymbolTable::getNewParamAddress(){
-	int size = paramTable.front().size();
-	int address = 4 * (size + 2);
-	return address;
+int SymbolTable::GetNewParamAddress()
+{
+   int size = mParamTable.front().size();
+   int address = 4 * ( size + 2 );
+   return address;
 }
 
-int SymbolTable::getNewLocalAddress(){
-	int size = localTable.front().size();
-	int address = -4 * (size + 1);
-	return address;
+int SymbolTable::GetNewLocalAddress()
+{
+   int size = mLocalTable.front().size();
+   int address = -4 * ( size + 1 );
+   return address;
 }
 
-int SymbolTable::getIdentifierAddress(string idName){
-	if (getLevel() > 0){
-
-		list<HashMap>::iterator itLocal = localTable.begin();
-		list<HashMap>::iterator itParam = paramTable.begin();
-		while (itLocal != localTable.end()){
-			// если нашли на этом уровне
-			if (itLocal->count(idName)) return itLocal->at(idName);
-			if (itParam->count(idName)) return itParam->at(idName);
-			++itLocal;
-			++itParam;
-		}	
-	}
-	return -1;
+int SymbolTable::GetIdentifierAddress( std::string idName )
+{
+   if( GetLevel() > 0 )
+   {
+      std::list< HashMap >::iterator itLocal = mLocalTable.begin();
+      std::list< HashMap >::iterator itParam = mParamTable.begin();
+      while( itLocal != mLocalTable.end() )
+      {
+         // если нашли на этом уровне
+         if( itLocal->count( idName ) ) return itLocal->at( idName );
+         if( itParam->count( idName ) ) return itParam->at( idName );
+         ++itLocal;
+         ++itParam;
+      }	
+   }
+   return -1;
 }
 
-int SymbolTable::getLevel(){
-	return localTable.size();
+int SymbolTable::GetLevel()
+{
+   return mLocalTable.size();
 }

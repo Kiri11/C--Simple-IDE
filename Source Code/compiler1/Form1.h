@@ -39,7 +39,7 @@ namespace compiler1 {
 		/// </summary>
 		~Form1()
 		{
-			if (components)
+			if(components)
 			{
 				delete components;
 			}
@@ -274,8 +274,8 @@ namespace compiler1 {
 				 openFileDialog1->FilterIndex = 2;
 				 openFileDialog1->RestoreDirectory = true;
 
-				 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK ){
-					 if ( (openFileDialog1->OpenFile()) != nullptr ){
+				 if( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK ){
+					 if( (openFileDialog1->OpenFile()) != nullptr ){
 						 auto MyReader = gcnew IO::StreamReader(openFileDialog1->FileName); 
 						 SourceTextBox->Text= MyReader->ReadToEnd();
 						 MyReader->Close();
@@ -286,7 +286,7 @@ private: System::Void SaveButton_Click(System::Object^  sender, System::EventArg
 			 SaveFileDialog^ saveFileDialog1 = gcnew SaveFileDialog;
 			 saveFileDialog1->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 			 saveFileDialog1->FileName = "source.txt";
-			 if (saveFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK) {
+			 if(saveFileDialog1->ShowDialog() == Windows::Forms::DialogResult::OK) {
 				 try{
 					 // Создание экземпляра StreamWriter для записи в файл:
 					 auto MyWriter = gcnew IO::StreamWriter(saveFileDialog1->FileName, false, System::Text::Encoding::GetEncoding(CP_UTF8));
@@ -302,50 +302,50 @@ private: System::Void SaveButton_Click(System::Object^  sender, System::EventArg
 		 }
 
 private: System::Void ScanButton_Click(System::Object^  sender, System::EventArgs^  e) {
-			string input_flow = marshal_as<std::string>(SourceTextBox->Text); // get string from input box
+			std::string input_flow = marshal_as<std::string>(SourceTextBox->Text); // get string from input box
 			Lexer myLexer (input_flow); // input flow
-			token myToken;
-			string token_string = ""; // initialize as an empty string
+			Token myToken;
+			std::string token_string = ""; // initialize as an empty string
 			ConsoleTextBox->Text = ""; // emptying the output window
 			parseTreeTextBox->Text = "";
 			symbolTextbox->Text = "";
 			try{
 				do{
-					myToken = myLexer.get_token();
+					myToken = myLexer.GetToken();
 					token_string = myToken.ToString() + " ";
 					ConsoleTextBox->Text += marshal_as<String^>(token_string);
-				}while (myToken.type != BLOCK && myToken.type != END); // get tokens until get BLOCK or END token
-			} catch (string block_string){
+				}while(myToken.type != BLOCK && myToken.type != END); // get tokens until get BLOCK or END token
+			} catch (std::string block_string){
 				ConsoleTextBox->Text += marshal_as<String^>(block_string);
 			}
 			
 		 }
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 			isCodeAccepted = false;
-			string input_flow = marshal_as<std::string>(SourceTextBox->Text); // get string from input box
+			std::string input_flow = marshal_as<std::string>(SourceTextBox->Text); // get string from input box
 			Parser myParser;
 			ConsoleTextBox->Text = ""; // emptying the output window
 			try{
-				ConsoleTextBox->Text = marshal_as<String^>(myParser.parse(input_flow));
+				ConsoleTextBox->Text = marshal_as<String^>(myParser.Parse(input_flow));
 				// Создание экземпляра StreamWriter для записи в файл:
 				auto MyWriter = gcnew IO::StreamWriter("asmCode.asm", false, System::Text::Encoding::GetEncoding(ANSI_CHARSET));
-				MyWriter->Write(marshal_as<String^>(myParser.getAsmCode()));
+				MyWriter->Write(marshal_as<String^>(myParser.AsmCode()));
 				MyWriter->Close(); 
 				ConsoleTextBox->Text += "ASM Code saved in \"AsmCode.asm\" file.";
 				isCodeAccepted = true;
-			} catch (string error_string){
+			} catch (std::string error_string){
 				ConsoleTextBox->Text += "!!! ";
 				ConsoleTextBox->Text += marshal_as<String^>(error_string);
-			} catch (Exception^ Ситуация){
-				MessageBox::Show(Ситуация->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Exclamation);
+			} catch (Exception^ ex){
+				MessageBox::Show(ex->Message, "Error", MessageBoxButtons::OK, MessageBoxIcon::Exclamation);
 			}
-			ConsoleTextBox->Text += "\n\nRead tokens:\n" + marshal_as<String^>(myParser.tokens);
-			parseTreeTextBox->Text = marshal_as<String^>(myParser.parsingTree);
-			symbolTextbox->Text = marshal_as<String^>(myParser.variables);
+			ConsoleTextBox->Text += "\n\nRead tokens:\n" + marshal_as<String^>(myParser.mTokens);
+			parseTreeTextBox->Text = marshal_as<String^>(myParser.mParsingTree);
+			symbolTextbox->Text = marshal_as<String^>(myParser.mVariables);
 		 }
 private: System::Void CompileAndRunButton_Click(System::Object^  sender, System::EventArgs^  e) {
 			button1_Click(sender, e);
-			if (isCodeAccepted == true) {
+			if(isCodeAccepted == true) {
 				try{
 					Process ^p;
 					ProcessStartInfo ^pInfo;

@@ -1,311 +1,362 @@
 ﻿#include "FSM.h"
 
-FSM::FSM(){
-	reset();
+FSM::FSM()
+{
+   Reset();
 }
 
-token_type FSM::get_current_state(){
-	return current_state;
+token_type FSM::GetCurrentState()
+{
+   return mCurrentState;
 }
 
-void FSM::reset(){
-	current_state = INITIAL;
-	current_string = "";
+void FSM::Reset()
+{
+   mCurrentState = INITIAL;
+   mCurrentString = "";
 }
 
-char_type FSM::check_char_type(char ch){
-	if (isdigit(ch)) return digit;
-	if (isalpha(ch)) return alpha;
-	if (isspace(ch) || ch == EOF) return space;
-	return smth;
+CharType FSM::CheckCharType( char ch )
+{
+   if( isdigit( ch ) ) return ctDigit;
+   if( isalpha( ch ) ) return ctAlpha;
+   if( isspace( ch ) || ch == EOF ) return ctSpace;
+   return ctSmth;
 }
 
-string FSM::get_current_string(){
-	return current_string;
+std::string FSM::GetCurrentString()
+{
+   return mCurrentString;
 }
 
-state FSM::transition(char input){
-
-	char_type input_type = check_char_type(input);
-	switch (current_state)
-	{
-	case INITIAL:
-		if (input == EOF) {
-			current_state = END;
-			return halt;
-		}
-		if (input_type == space) {
-			return progress;
-		}
-		if (input_type == digit) {
-			current_state = NUMBER;
-			current_string += input;
-			return progress;
-		}
-		if (input_type == alpha || input == '_') {
-			current_state = IDENTIFIER;
-			current_string += input;
-			return progress;
-		}
-		if (input == '"') {
-			current_state = STRING_IN_PROC;
-			return progress;
-		}
-		if (input == '&') {
-			current_state = AMPERSAND;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '|') {
-			current_state = BAR;
-			//current_string += input;
-			return progress;
-		}
-		if (input == ';') {
-			current_state = SEMICOLON;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '*') {
-			current_state = MULT;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '+') {
-			current_state = PLUS;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '-') {
-			current_state = MINUS;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '(') {
-			current_state = LEFT_PAREN;
-			//current_string += input;
-			return progress;
-		}
-		if (input == ')') {
-			current_state = RIGHT_PAREN;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '{') {
-			current_state = LEFT_BRACE;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '}') {
-			current_state = RIGHT_BRACE;
-			//current_string += input;
-			return progress;
-		}
-		if (input == ',') {
-			current_state = COMMA;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '=') {
-			current_state = ASSIGN;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '!') {
-			current_state = NOT;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '<') {
-			current_state = LESS;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '>') {
-			current_state = MORE;
-			//current_string += input;
-			return progress;
-		}
-		if (input == '/') {
-			current_state = DIVISION;
-			//current_string += input;
-			return progress;
-		}
-		return block;
-	case STRING_IN_PROC:
-		if (input == '\\') {
-			current_state = STRING_ESCAPE;
-			return progress;
-		}
-		if (input == '"') {
-			current_state = COMPLETED_STRING;
-			return progress;
-		}
-		if (input == '\n'){
-			return block;
-		}
-		current_string += input;
-		return progress;
-	case STRING_ESCAPE:
-		if (input == 't'){
-			current_state = STRING_IN_PROC;
-			current_string += '\t';
-			return progress;
-		}
-		// передвигаем каретку назад, чтобы избежать пустых строк. По идее не должно влиять
-		if (input == 'n'){
-			current_state = STRING_IN_PROC;
-			current_string += "\b\", 0Ah, \"\b";
-			return progress;
-		}
-		if (input == '\\'){
-			current_state = STRING_IN_PROC;
-			current_string += '\\';
-			return progress;
-		}
-		if (input == '"'){
-			current_state = STRING_IN_PROC;
-			current_string += '"';
-			return progress;
-		}
-		if (input == 'b'){
-			current_state = STRING_IN_PROC;
-			current_string += '\b';
-			return progress;
-		}
-		return block;
-	case COMM_LINE:
-		if (input == '\n'){
-			current_state = INITIAL;
-		}
-		return progress;
-	case COMM_IN_PROC:
-		if (input == EOF){
-			return block;
-		}
-		if (input == '*'){
-			current_state = COMM_ABOUT_TO_FINISH;
-		}
-		return progress;
-	case COMM_ABOUT_TO_FINISH:
-		if (input == EOF){
-			return block;
-		}
-		if (input == '/'){
-			current_state = INITIAL;
-			return progress;
-		}
-		current_state = COMM_IN_PROC;
-		return progress;
-	case AMPERSAND:
-		if (input == '&'){
-			//current_string += input;
-			current_state = AND;
-			return progress;
-		}
-		return block;
-	case BAR:
-		if (input == '|'){
-			//current_string += input;
-			current_state = OR;
-			return progress;
-		}
-		return block;
-	case IDENTIFIER:
-		if (input_type == alpha || input_type == digit || input == '_'){
-			current_string += input;
-			return progress;
-		}
-		return halt;
-	case NUMBER:
-		if (input_type == digit){
-			current_string += input;
-			return progress;
-		}
-		if (input_type == alpha || input == '_'){
-			return block;
-		}
-		return halt;
-	case SEMICOLON:
-		return halt;
-	case MULT:
-		return halt;
-	case PLUS:
-		return halt;
-	case MINUS:
-		return halt;
-	case LEFT_PAREN:
-		return halt;
-	case RIGHT_PAREN:
-		return halt;
-	case LEFT_BRACE:
-		return halt;
-	case RIGHT_BRACE:
-		return halt;
-	case COMMA:
-		return halt;;
-	case ASSIGN:
-		if (input == '='){
-			current_state = EQUALS;
-			//current_string += input;
-			return progress;
-		}
-		return halt;
-	case NOT:
-		if (input == '='){
-			current_state = NOT_EQUALS;
-			//current_string += input;
-			return progress;
-		}
-		if (input_type == space || input == '/'){
-			return block;
-		}
-		return halt;
-	case LESS:
-		if (input == '='){
-			current_state = LESS_EQUALS;
-			//current_string += input;
-			return progress;
-		}
-		return halt;
-	case MORE:
-		if (input == '='){
-			current_state = MORE_EQUALS;
-			//current_string += input;
-			return progress;
-		}
-		return halt;
-	case EQUALS:
-		return halt;
-	case NOT_EQUALS:
-		return halt;
-	case LESS_EQUALS:
-		return halt;
-	case MORE_EQUALS:
-		return halt;
-	case AND:
-		return halt;
-	case OR:
-		return halt;
-	case COMPLETED_STRING:
-		return halt;
-	case DIVISION:
-		if (input == '/'){
-			current_state = COMM_LINE;
-			current_string = "";
-			return progress;
-		}
-		if (input == '*'){
-			current_state = COMM_IN_PROC;
-			current_string = "";
-			return progress;
-		}
-		return halt;
-		break;
-	case END:
-		return halt;
-	default:
-		break;
-	}
-	return block;
+State FSM::Transition( char input )
+{
+   CharType input_type = CheckCharType( input );
+   switch( mCurrentState )
+   {
+   case INITIAL:
+      if( input == EOF )
+      {
+         mCurrentState = END;
+         return sHalt;
+      }
+      if( input_type == ctSpace )
+      {
+         return sProgress;
+      }
+      if( input_type == ctDigit )
+      {
+         mCurrentState = NUMBER;
+         mCurrentString += input;
+         return sProgress;
+      }
+      if( input_type == ctAlpha || input == '_' )
+      {
+         mCurrentState = IDENTIFIER;
+         mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '"' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         return sProgress;
+      }
+      if( input == '&' )
+      {
+         mCurrentState = AMPERSAND;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '|' )
+      {
+         mCurrentState = BAR;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == ';' )
+      {
+         mCurrentState = SEMICOLON;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '*' )
+      {
+         mCurrentState = MULT;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '+' )
+      {
+         mCurrentState = PLUS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '-' )
+      {
+         mCurrentState = MINUS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '(' )
+      {
+         mCurrentState = LEFT_PAREN;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == ')')
+      {
+         mCurrentState = RIGHT_PAREN;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '{' )
+      {
+         mCurrentState = LEFT_BRACE;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '}' )
+      {
+         mCurrentState = RIGHT_BRACE;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == ',' )
+      {
+         mCurrentState = COMMA;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '=' )
+      {
+         mCurrentState = ASSIGN;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '!' )
+      {
+         mCurrentState = NOT;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '<' )
+      {
+         mCurrentState = LESS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '>' )
+      {
+         mCurrentState = MORE;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input == '/' )
+      {
+         mCurrentState = DIVISION;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      return sBlock;
+   case STRING_IN_PROC:
+      if( input == '\\' ) 
+      {
+         mCurrentState = STRING_ESCAPE;
+         return sProgress;
+      }
+      if( input == '"' )
+      {
+         mCurrentState = COMPLETED_STRING;
+         return sProgress;
+      }
+      if( input == '\n' )
+      {
+         return sBlock;
+      }
+      mCurrentString += input;
+      return sProgress;
+   case STRING_ESCAPE:
+      if( input == 't' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         mCurrentString += '\t';
+         return sProgress;
+      }
+      // передвигаем каретку назад, чтобы избежать пустых строк. По идее не должно влиять
+      if( input == 'n' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         mCurrentString += "\b\", 0Ah, \"\b";
+         return sProgress;
+      }
+      if( input == '\\' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         mCurrentString += '\\';
+         return sProgress;
+      }
+      if( input == '"' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         mCurrentString += '"';
+         return sProgress;
+      }
+      if( input == 'b' )
+      {
+         mCurrentState = STRING_IN_PROC;
+         mCurrentString += '\b';
+         return sProgress;
+      }
+      return sBlock;
+   case COMM_LINE:
+      if( input == '\n' )
+      {
+         mCurrentState = INITIAL;
+      }
+      return sProgress;
+   case COMM_IN_PROC:
+      if( input == EOF )
+      {
+         return sBlock;
+      }
+      if( input == '*' )
+      {
+         mCurrentState = COMM_ABOUT_TO_FINISH;
+      }
+      return sProgress;
+   case COMM_ABOUT_TO_FINISH:
+      if( input == EOF )
+      {
+         return sBlock;
+      }
+      if( input == '/' )
+      {
+         mCurrentState = INITIAL;
+         return sProgress;
+      }
+      mCurrentState = COMM_IN_PROC;
+      return sProgress;
+   case AMPERSAND:
+      if( input == '&' )
+      {
+         //mCurrentString += input;
+         mCurrentState = AND;
+         return sProgress;
+      }
+      return sBlock;
+   case BAR:
+      if( input == '|' )
+      {
+         //mCurrentString += input;
+         mCurrentState = OR;
+         return sProgress;
+      }
+      return sBlock;
+   case IDENTIFIER:
+      if( input_type == ctAlpha || input_type == ctDigit || input == '_' )
+      {
+         mCurrentString += input;
+         return sProgress;
+      }
+      return sHalt;
+   case NUMBER:
+      if( input_type == ctDigit )
+      {
+         mCurrentString += input;
+         return sProgress;
+      }
+      if( input_type == ctAlpha || input == '_' )
+      {
+         return sBlock;
+      }
+      return sHalt;
+   case SEMICOLON:
+      return sHalt;
+   case MULT:
+      return sHalt;
+   case PLUS:
+      return sHalt;
+   case MINUS:
+      return sHalt;
+   case LEFT_PAREN:
+      return sHalt;
+   case RIGHT_PAREN:
+      return sHalt;
+   case LEFT_BRACE:
+      return sHalt;
+   case RIGHT_BRACE:
+      return sHalt;
+   case COMMA:
+      return sHalt;
+   case ASSIGN:
+      if( input == '=' )
+      {
+         mCurrentState = EQUALS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      return sHalt;
+   case NOT:
+      if( input == '=' )
+      {
+         mCurrentState = NOT_EQUALS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      if( input_type == ctSpace || input == '/' )
+      {
+         return sBlock;
+      }
+      return sHalt;
+   case LESS:
+      if( input == '=' )
+      {
+         mCurrentState = LESS_EQUALS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      return sHalt;
+   case MORE:
+      if( input == '=' )
+      {
+         mCurrentState = MORE_EQUALS;
+         //mCurrentString += input;
+         return sProgress;
+      }
+      return sHalt;
+   case EQUALS:
+      return sHalt;
+   case NOT_EQUALS:
+      return sHalt;
+   case LESS_EQUALS:
+      return sHalt;
+   case MORE_EQUALS:
+      return sHalt;
+   case AND:
+      return sHalt;
+   case OR:
+      return sHalt;
+   case COMPLETED_STRING:
+      return sHalt;
+   case DIVISION:
+      if( input == '/' )
+      {
+         mCurrentState = COMM_LINE;
+         mCurrentString = "";
+         return sProgress;
+      }
+      if( input == '*' )
+      {
+         mCurrentState = COMM_IN_PROC;
+         mCurrentString = "";
+         return sProgress;
+      }
+      return sHalt;
+      break;
+   case END:
+      return sHalt;
+   default:
+      break;
+   }
+   return sBlock;
 }

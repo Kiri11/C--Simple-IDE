@@ -1,4 +1,5 @@
 #pragma once
 
-class Error{
+class Error
+{
 };

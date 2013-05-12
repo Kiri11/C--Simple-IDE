@@ -1,55 +1,54 @@
 #pragma once
 #include <string>
-#include <stack>
-using std::string;
-using std::stack;
 
-class CodeGenerator{
+class CodeGenerator
+{
 public:
-	CodeGenerator();
-	string getAsmCode();
+	            CodeGenerator();
+	std::string AsmCode();
 
-	void genProgramStart();
-	void genProgramEnd();
-	void genPrintf();
-	int  genFuncStart(string funcName);
-	void genFuncEnd(string funcName, int retLabel);
-	void genFuncCall(string funcName, int paramCountCall);
-	void genPush(int n);
-	void genPush(string reg);
-	void genStringPush(string str);
-	void genBinaryOperation(string operationName);
-	void genMultiplication();
-	void genDivision();
-	void genCompare(string sign);
-	void genAnd();
-	void genOr();
-	void genNegate();
-	void genNot();
-	void genLabel(int labelNum);
-	int genIfStart();
-	int genJmp();
-	void genJmp(int label);
-	void genPop(string reg);
-	int genWhileStart();
-	int genWhileMiddle();
-	int genDoStart();
-	void genDoMiddle(int doStartLabel);
-	void genAssign(string addrTo);
-	void genLocalVarDef();
-	void genGlobalVarDef(string varName);
-	int  createLabel();
-	void genReturn(int loopEndLabel);
+	       void GenProgramStart();
+	       void GenProgramEnd();
+	       void GenPrintf();
+	        int GenFuncStart( std::string funcName );
+	       void GenFuncEnd( std::string funcName, int retLabel );
+	       void GenFuncCall( std::string funcName, int paramCountCall );
+	       void GenPush( int n );
+	       void GenPush( std::string reg );
+	       void GenStringPush( std::string str );
+	       void GenBinaryOperation( std::string operationName );
+	       void GenMultiplication();
+	       void GenDivision();
+	       void GenCompare( std::string sign );
+	       void GenAnd();
+	       void GenOr();
+	       void GenNegate();
+	       void GenNot();
+	       void GenLabel( int labelNum );
+	        int GenIfStart();
+	        int GenJmp();
+	       void GenJmp( int label );
+	       void GenPop( std::string reg );
+	        int GenWhileStart();
+	        int GenWhileMiddle();
+	        int GenDoStart();
+	       void GenDoMiddle( int doStartLabel );
+	       void GenAssign( std::string addrTo );
+	       void GenLocalVarDef();
+	       void GenGlobalVarDef( std::string varName );
+	        int CreateLabel();
+	       void GenReturn( int loopEndLabel );
 
 private:
-	int stackReverseCount;
-	int strCount;
-	int labelCount;
-	string asmCode;
+   	
+           void GenBlockHeader( std::string blockName );
+	        void GenMov( std::string toStr, std::string fromStr );
+	        void GenReverseStack( int itemsCount );
+	        void GenLine( std::string line );
+	        void GenLine();
 
-	void genBlockHeader(string blockName);
-	void genMov(string toStr, string fromStr);
-	void genReverseStack(int itemsCount);
-	void genLine(string line);
-	void genLine();
+	         int mStackReverseCount;
+	         int mStrCount;
+	         int mLabelCount;
+	 std::string mAsmCode;
 };

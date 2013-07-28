@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'miniide.ui'
 **
-** Created: Thu 25. Jul 23:14:41 2013
+** Created: Sun 28. Jul 12:36:45 2013
 **      by: Qt User Interface Compiler version 5.0.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

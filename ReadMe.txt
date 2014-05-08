@@ -10,4 +10,4 @@ To properly run binary code MS Visual Studio must be installed.
 
 4. Program Descripton (Russian).pdf.
 
-3. Several tests I used in the "Tests" folder.
+5. Several tests I used in the "Tests" folder.

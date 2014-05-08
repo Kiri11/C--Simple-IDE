@@ -4,4 +4,10 @@ This project consist of:
 It is possible to compile the MASM code further into binary code and run the program. Batch files and Irvine library are used for this (folder "Lib"). 
 To properly run binary code MS Visual Studio must be installed.
 
-2. Several tests I used in the "Tests" folder.
+2. Source code folder.
+
+3. Syntax Summary for C-- language.pdf (english).
+
+4. Program Descripton (Russian).pdf.
+
+3. Several tests I used in the "Tests" folder.
